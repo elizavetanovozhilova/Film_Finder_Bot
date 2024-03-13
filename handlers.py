@@ -7,6 +7,7 @@ from random import choice
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import State, StatesGroup
+import database
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
@@ -20,7 +21,7 @@ async def menu(message: Message):
 
 @router.callback_query(F.data=='menu')
 async def menuu(callback:types.callback_query):
-    await callback.message.answer(menu.text, reply_markup=keyboard.menu)
+    await callback.message.answer(text.menu, reply_markup=keyboard.menu)
 
 films_dict={'barbie':'The film is about Barbie'}
 
@@ -35,16 +36,19 @@ async def film_info(callback: types.CallbackQuery, state: FSMContext):
 @router.message(Form.p, F.text)
 async def films_infoss(message: types.Message, state: FSMContext):
     await state.update_data(film=message.text)
-    d=films_dict.get(message.text.lower())
+    d=database.learn_about_film(message.text)
     await message.answer(d)
     await state.clear()
 
-films=['Star Wars', 'Barbie', 'Interstellar', 'Snitch']
+
 @router.callback_query(F.data == "random_film")
 async def send_random_value(callback: types.CallbackQuery):
-    await callback.message.answer(str(choice(films)))
+    await callback.message.answer(f'{database.random_film()}')
 
 @router.callback_query(F.data == "help")
 async def send_random_value(callback: types.CallbackQuery):
     await callback.message.answer(text.help_text, reply_markup=keyboard.iexit_kb)
 
+@router.message(F.text)
+async def random_text(message: types.Message):
+    await message.answer(text.random_text, reply_markup=keyboard.menu)
