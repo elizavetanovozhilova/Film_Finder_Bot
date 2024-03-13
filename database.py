@@ -1,5 +1,6 @@
 import sqlite3
 import random
+from aiogram.types import URLInputFile
 
 conn = sqlite3.connect("mydata.db")
 
@@ -26,18 +27,22 @@ res = cursor.fetchall()
 '''
 for r in res:
     print("Name:", r[0])
-    print("Actors:", r[2])
+    print("links img:", r[8])
     
 '''
-#file_id = cursor.execute("SELECT img_link FROM films", ).fetchall()[num][0]
+
 def random_film():
        num=random.randint(0, len(res))
-       return f'<b>{res[num][0]}</b>, {res[num][4]}\n\n<i>{res[num][1]}</i>\n\n{res[num][5]}'
+       img = URLInputFile(f'{res[num][8]}')
+       return f'Советую посмотреть этот фильм!\n\n<b>{res[num][0]}</b>, {res[num][4]}\n\n<i>{res[num][1]}</i>\n\n{res[num][5]}', img
 
 def learn_about_film(message):
        for r in res:
               if r[0].lower()==message.lower():
-                     return f'<b>{r[0]}</b>, {r[4]}\n\n<i>{r[1]}</i>\n\n{r[5]}'
+                     return f'<b>{r[0]}</b>, {r[4]}\n\n<i>{r[1]}</i>\n\n{r[5]}', URLInputFile(f'{r[8]}')
+              elif message.lower() in r[0].lower():
+                     return f'Возможно вы имели в виду этот фильм:\n\n<b>{r[0]}</b>, {r[4]}\n\n<i>{r[1]}</i>\n\n{r[5]}', URLInputFile(f'{r[8]}')
+
 
 
 conn.close()

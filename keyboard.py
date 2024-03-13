@@ -4,7 +4,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, \
 menu = [
     [InlineKeyboardButton(text="Узнать о фильме", callback_data="film_info"),
     InlineKeyboardButton(text="Подобрать фильм ", callback_data="find_film")],
-    [InlineKeyboardButton(text="Рандомный фильм", callback_data="random_film")],
+    [InlineKeyboardButton(text="Рандомный фильм", callback_data="random_film"),
+     InlineKeyboardButton(text="Найти похожий", callback_data="similar_film")],
     [InlineKeyboardButton(text="🔎 Нужна помощь", callback_data="help")]
 ]
 menu = InlineKeyboardMarkup(inline_keyboard=menu)
